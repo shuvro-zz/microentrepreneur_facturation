@@ -1,0 +1,50 @@
+
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+
+
+// Bootstrap
+@import "~bootstrap/scss/_functions.scss";
+@import "~bootstrap/scss/_variables.scss";
+@import "~bootstrap/scss/_mixins.scss";
+@import "~bootstrap/scss/_utilities.scss";
+
+// Variables
+@import "variables";
+
+
+// Elemnt
+@import 'element-variables';
+
+
+body {
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+.el-header {
+  line-height: 60px;
+}
+
+.el-aside {
+  color: #333;
+}
+
+.el-menu-item:hover {
+  background: none !important;
+}
+
+
+.el-select .el-input {
+  width: 110px;
+}
+
+a {
+  text-decoration: none;
+}
