@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ClientController extends Controller
 {
@@ -69,7 +70,8 @@ class ClientController extends Controller
      */
     public function edit($id)
     {
-        //
+        $client = Client::findOrFail($id);
+        return view('clients.edit', ['client' => $client]);
     }
 
     /**
@@ -81,7 +83,26 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $client        = Client::findOrFail($id);
+        $validatedData = $request->validate([
+            'company_name' => [
+                'required',
+                Rule::unique('clients')->ignore($client->id),
+            ],
+            'siren'        => [
+                'required',
+                Rule::unique('clients')->ignore($client->id),
+            ],
+            'address'      => 'required',
+            'postal_code'  => 'required',
+            'city'         => 'required',
+            'country'      => 'required',
+            'email'        => 'required|email',
+        ]);
+
+        $client = Client::findOrFail($id);
+        $client->fill(request()->all());
+        return redirect()->route('clients.index');
     }
 
     /**
@@ -92,6 +113,7 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Client::destroy($id);
+        return redirect()->route('clients.index');
     }
 }

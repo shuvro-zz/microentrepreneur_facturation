@@ -3,9 +3,10 @@
 @section('active-menu', 1)
 
 @section('body')
-    <el-card class="box-card" header="Nouveau client">
+    <el-card class="box-card" header="{{ $client->company_name }}">
         <div class="text item">
-            <el-form ref="form" :model="client" method="post" action="{{ route('clients.store') }}">
+            <el-form ref="form" :model="client" method="post" action="{{ route('clients.update', ['id' => $client->id]) }}">
+                <input name="_method" type="hidden" value="PUT">
                 @csrf
                 <el-form-item :error="errors['company_name']">
                     <el-row>
@@ -101,7 +102,7 @@
 
 @push('scripts')
     <script>
-        window.client = {!! json_encode((object) old()) !!}
+        window.client = {!! json_encode((object) collect($client->toArray())->merge(old())) !!}
     </script>
     <script src="{{ asset('js/default-app.js') }}" defer></script>
 @endpush

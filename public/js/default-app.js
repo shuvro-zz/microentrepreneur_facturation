@@ -60,24 +60,24 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 185);
+/******/ 	return __webpack_require__(__webpack_require__.s = 187);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 185:
+/***/ 187:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(186);
+module.exports = __webpack_require__(188);
 
 
 /***/ }),
 
-/***/ 186:
+/***/ 188:
 /***/ (function(module, exports, __webpack_require__) {
 
-var preloader = __webpack_require__(187);
-var navigation = __webpack_require__(188);
+var preloader = __webpack_require__(46);
+var navigation = __webpack_require__(47);
 
 var app = new Vue({
     el: '#default-app',
@@ -86,10 +86,21 @@ var app = new Vue({
         return {
             data: window.data,
             client: window.client || {},
-            errors: window.errors || {}
+            errors: window.errors || {},
+            current: null,
+            deleteModalVisible: false
         };
     },
 
+    watch: {
+        current: function current() {
+            if (this.current) {
+                this.deleteModalVisible = true;
+            } else {
+                this.deleteModalVisible = false;
+            }
+        }
+    },
     methods: {
         onSubmit: function onSubmit() {
             this.$el.querySelector('form').submit();
@@ -99,7 +110,7 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 187:
+/***/ 46:
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -111,7 +122,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 188:
+/***/ 47:
 /***/ (function(module, exports) {
 
 module.exports = {

@@ -1,9 +1,13 @@
 @extends('layouts.app')
 
+@section('active-menu', 1)
+
 @section('body')
     <el-card class="box-card" header="Clients">
         <div class="text item">
-            <el-button type="primary" class="text-white mb-2 p-0"><a class="text-white p-3 d-block" href="{{ route('clients.create') }}"><i class="fas fa-plus-circle"></i> Nouveau </a></el-button>
+            <el-button type="primary" class="text-white mb-2 p-0"><a class="text-white p-3 d-block"
+                                                                     href="{{ route('clients.create') }}"><i
+                            class="fas fa-plus-circle"></i> Nouveau </a></el-button>
             <el-table
                     :data="data"
                     stripe
@@ -24,8 +28,9 @@
                         label="Actions"
                 >
                     <template slot-scope="scope">
-                        <el-button type="text" size="small"><a :href="scope.row.editUrl">Edit</a></el-button>
-                        <el-button type="text" size="small"><a :href="scope.row.deleteUrl">Supprimer</a></el-button>
+                        <el-button type="primary" size="small"><a class="text-white" :href="scope.row.editUrl"><i
+                                        class="fas fa-edit"></i></a></el-button>
+                        <el-button type="danger" size="small" @click="current = scope.row;"><i class="fas fa-trash"></i></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -36,6 +41,21 @@
                     :closable="false"
             >
             </el-alert>
+            <el-dialog
+                    title="Confirmation"
+                    :visible.sync="deleteModalVisible"
+                    width="30%"
+            >
+                <form :action="current.deleteUrl" method="post" v-if="current">
+                    <input name="_method" type="hidden" value="DELETE">
+                    @csrf
+                    <p>Suppression de <strong>@{{ current.company_name }}</strong></p>
+                    <span slot="footer" class="dialog-footer d-flex justify-content-end">
+                        <el-button @click="current = null">Annuler</el-button>
+                        <el-button native-type="submit" type="danger" >Supprimer</el-button>
+                      </span>
+                </form>
+            </el-dialog>
         </div>
     </el-card>
 

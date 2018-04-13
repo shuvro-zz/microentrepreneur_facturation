@@ -29,7 +29,7 @@ body {
 }
 
 .el-header {
-  line-height: 60px;
+  line-height: 61px;
 }
 
 .el-aside {
@@ -47,4 +47,7 @@ body {
 
 a {
   text-decoration: none;
+}
+.el-select .el-input {
+  width: 100%;
 }

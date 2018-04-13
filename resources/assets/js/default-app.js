@@ -8,7 +8,18 @@ const app = new Vue({
         return {
             data: window.data,
             client: window.client || {},
-            errors: window.errors || {}
+            errors: window.errors || {},
+            current: null,
+            deleteModalVisible: false
+        }
+    },
+    watch: {
+        current: function () {
+            if (this.current) {
+                this.deleteModalVisible = true
+            } else {
+                this.deleteModalVisible = false
+            }
         }
     },
     methods: {
