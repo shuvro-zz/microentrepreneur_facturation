@@ -18,3 +18,5 @@ Route::get('/', function () {
 
 Route::resource('clients', 'ClientController');
 Route::resource('bills', 'BillController');
+
+Route::post('bills/emit/{id}', 'BillController@emit')->name('bills.emit');

@@ -1,103 +1,29 @@
-@php
-    $currencies = $bill->benefits->groupBy(function($b) {
-        return $b->pivot->currency;
-    });
-@endphp
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="utf-8">
-    <style>
+@extends('layouts.app')
 
-    </style>
-</head>
-<body>
-<table style="width: 100%">
-    <tr>
-        <td>
-            RUARO Aurélien<br>
-            170 Chemin de la Praz<br>
-            73100 Saint Offenge<br>
-            France<br>
-            aurelien.ruaro@gmail.com<br>
-            06.51.43.21.91
-        </td>
-        <td>
-            &nbsp;
-        </td>
-    </tr>
-    <tr>
-        <td>Dispensé d'immatriculation au registre du commerce et des sociétés (RCS) et au répertoire des métiers</td>
-        <td>
-            {{ $bill->client->company_name }}<br>
-            {{ $bill->client->siren }}<br>
-            {{ $bill->client->address }}<br>
-            {{ $bill->client->postal_code }} {{ $bill->client->city }}<br>
-            {{ $bill->client->country }}<br>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <td>Référence</td>
-                    <td>{{ $bill->id }}</td>
-                </tr>
-                <tr>
-                    <td>Date</td>
-                    <td>{{ $bill->created_at->format('d/m/Y')}}</td>
-                </tr>
-                <tr>
-                    <td>N° client</td>
-                    <td>{{ $bill->client->id}}</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    @foreach($currencies as $currency => $benefits )
-    <tr>
-        <td colspan="2">
-            <table style="width: 100%;">
-                <caption>Payable en {{ $currency }}</caption>
-                <tr>
-                    <th>Quantité</th>
-                    <th>Désignation</th>
-                    <th>Prix unitaire HT</th>
-                    <th>Prix total HT</th>
-                </tr>
-                @foreach($benefits as $benefit)
-                    <tr>
-                        <td>{{ $benefit->pivot->quantity }}</td>
-                        <td>{{ $benefit->value }}</td>
-                        <td>{{ $benefit->pivot->unit_price }}</td>
-                        <td>{{ $benefit->pivot->unit_price *  $benefit->pivot->quantity}}</td>
-                    </tr>
-                @endforeach
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td style="width: 50%">&nbsp;</td>
-        <td>
-            <table style="width: 100%">
-                <tr>
-                    <td>Total HT</td>
-                    <td>{{ $benefits->sum(function($b) {
-                        return $b->pivot->unit_price *  $b->pivot->quantity;
-                    }) }}</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    @endforeach
-    <tr>
-        <td style="width:50%;">&nbsp;</td>
-        <td>TVA non applicable, art. 293 B du CGI</td>
-    </tr>
-    <tr>
-        <td>En votre aimable réglement<br><br>Cordialement</td>
-    </tr>
-</table>
-</body>
-</html>
+@section('active-menu', 2)
+
+@section('body')
+    <el-card header="Facture #{{$bill->id}}" class="bg-dark text-white">
+        <div style="width: 21cm; height: 29.7cm" class="m-auto border bg-white text-dark">
+            @include('bills.pdf', ['bill' => $bill])
+        </div>
+        <el-row class="mt-3">
+            <el-col :span="12" class="d-flex justify-content-center">
+                <el-button type="primary"><a class="text-white"
+                                             href="{{ route('bills.edit', ['id' => $bill->id]) }}">Editer</a>
+                </el-button>
+            </el-col>
+            <el-col :span="12" class="d-flex justify-content-center">
+                <form action="{{ route('bills.emit', ['id' => $bill->id]) }}" method="post">
+                    @csrf
+                    <el-button native-type="submit" type="success">Valider</el-button>
+                </form>
+            </el-col>
+        </el-row>
+    </el-card>
+
+@endsection
+
+@push('scripts')
+    <script src="{{ asset('js/default-app.js') }}" defer></script>
+@endpush

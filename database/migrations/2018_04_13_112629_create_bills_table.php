@@ -17,8 +17,10 @@ class CreateBillsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients');
+            $table->boolean('draft')->default(1);
+            $table->timestamp('paid_at')->nullable()->default(null);
             $table->timestamps();
-            $table->softDelete();
+            $table->softDeletes();
         });
     }
 

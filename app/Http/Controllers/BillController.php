@@ -83,7 +83,8 @@ class BillController extends Controller
         }
 
 
-        \DB::transaction(function() {
+        \DB::beginTransaction();
+        try {
             $bill = Bill::create(['client_id' => request()->input('client_id')]);
             foreach (request()->input('benefits') as $benefit) {
                 if (!empty($benefit['value'])) {
@@ -95,8 +96,11 @@ class BillController extends Controller
                     ]);
                 }
             }
-        });
-        return redirect()->route('bills.index');
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollback();
+        }
+        return redirect()->route('bills.show', ['id' => $bill->id]);
     }
 
     /**
@@ -132,6 +136,11 @@ class BillController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function emit(Request $request, $id)
+    {
+
     }
 
     /**
