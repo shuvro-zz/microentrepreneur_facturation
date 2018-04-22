@@ -63,7 +63,14 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
-
+        'google' => [
+            'driver' => 'google',
+            'clientId' => env('GOOGLE_DRIVE_CLIENT_ID'),
+            'clientSecret' => env('GOOGLE_DRIVE_CLIENT_SECRET'),
+            'folderId' => env('GOOGLE_DRIVE_FOLDER_ID'),
+            'refreshToken' => env('GOOGLE_DRIVE_REFRESH_TOKEN'),
+            'accessToken' => env('GOOGLE_DRIVE_ACCESS_TOKEN')
+        ],
     ],
 
 ];

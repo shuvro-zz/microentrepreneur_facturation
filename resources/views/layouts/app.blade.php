@@ -25,7 +25,8 @@
         <el-header class="bg-light border-bottom" style="height: 61px;">
             <el-menu class="bg-light" default-active="@yield('active-menu', 0)" class="el-menu-demo" mode="horizontal">
                 <el-menu-item index="0" class="mr-5"><a class="d-block" href="{{ url('/') }}">Accueil</a></el-menu-item>
-                <el-menu-item index="1"><a class="d-block" href="{{ route('clients.index') }}">Clients</a></el-menu-item>
+                <el-menu-item index="1"><a class="d-block" href="{{ route('clients.index') }}">Clients</a>
+                </el-menu-item>
                 <el-menu-item index="2"><a class="d-block" href="{{ route('bills.index') }}">Factures</a></el-menu-item>
             </el-menu>
         </el-header>
@@ -45,9 +46,18 @@
 
 
                     </template>
-                    @endif
                 </el-alert>
-                @yield('body')
+            @endif
+            @if (session('status'))
+                <el-alert
+                        title="{{ session('status') }}"
+                        type="success"
+                        show-icon
+                        class="mb-2"
+                >
+                </el-alert>
+            @endif
+            @yield('body')
         </el-main>
         <el-footer class="d-flex bg-light align-items-center">
             <div class="ml-auto">Copyright {{ date('Y') }}</div>

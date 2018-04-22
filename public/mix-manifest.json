@@ -1,7 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
+    "/css/pdf.css": "/css/pdf.css",
     "/css/app.css": "/css/app.css",
-    "/js/default-app.js": "/js/default-app.js",
     "/js/bill.js": "/js/bill.js",
+    "/js/default-app.js": "/js/default-app.js",
     "/js/vendors.js": "/js/vendors.js"
 }

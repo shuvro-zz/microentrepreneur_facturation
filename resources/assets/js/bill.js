@@ -13,13 +13,15 @@ const app = new Vue({
                     'value': '',
                     'quantity': '',
                     'unit_price': '',
-                    'currency': ''
+                    'currency': '',
+                    'designation': ''
                 }]
             },
             clients: window.clients || [],
             benefits: window.benefits || [],
             errors: window.errors || {},
-            client_id: window.bill ? window.bill.client_id : ''
+            client_id: window.bill ? window.bill.client_id : '',
+            client: window.bill && window.bill.client ? window.bill.client.name : ''
         }
     },
     watch: {

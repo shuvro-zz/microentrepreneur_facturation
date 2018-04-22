@@ -9,9 +9,10 @@
         </el-alert>
     @else
 
-        <el-card class="box-card" header="Facture #">
+        <el-card class="box-card" header="Facture #{{$bill->id}}">
             <div class="text item">
-                <el-form ref="form" :model="bill" method="post" action="{{ route('bills.store') }}">
+                <el-form ref="form" :model="bill" method="post" action="{{ route('bills.update', ['id' => $bill->id]) }}">
+                    <input name="_method" type="hidden" value="PUT">
                     @csrf
                     <input type="hidden" name="client_id" :value="client_id">
                     <el-form-item :error="errors['client_id']">
@@ -29,6 +30,16 @@
                                             :value="client.id">
                                     </el-option>
                                 </el-select>
+                            </el-col>
+                        </el-row>
+                    </el-form-item>
+                    <el-form-item :error="errors['designation']">
+                        <el-row>
+                            <el-col :span="24" class="pr-2" :sm="{span: 6}">
+                                <label class="d-block w-100">Désignation</label>
+                            </el-col>
+                            <el-col :span="24" :sm="{span: 18}">
+                                <el-input name="designation" v-model="bill.designation"></el-input>
                             </el-col>
                         </el-row>
                     </el-form-item>
@@ -104,9 +115,17 @@
 
 @push('scripts')
     <script>
+        @php
+        $bill->benefits = $bill->benefits->map(function($b) {
+            $b->quantity = $b->pivot->quantity;
+            $b->unit_price= $b->pivot->unit_price;
+            $b->currency= $b->pivot->currency;
+            return $b;
+        })
+        @endphp
         window.clients = {!! json_encode($clients) !!};
         window.benefits = {!! json_encode($benefits) !!};
-        window.bill = {!! json_encode($bill->merge(collect(old())) !!}
+        window.bill = {!! json_encode(collect($bill->toArray())->merge(collect(old()))) !!}
 
     </script>
     <script src="{{ asset('js/bill.js') }}" defer></script>

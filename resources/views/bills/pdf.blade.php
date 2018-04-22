@@ -3,39 +3,41 @@
         return $b->pivot->currency;
     });
 @endphp
-<div style="padding: 50px" class="pdf-bill">
+<div class="pdf-bill">
     <table style="width: 100%">
         <tr>
-            <td>
+            <td style="width: 50%">
                 RUARO Aurélien<br>
                 170 Chemin de la Praz<br>
                 73100 Saint Offenge<br>
                 France<br>
                 aurelien.ruaro@gmail.com<br>
-                06.51.43.21.91
+                + 33 (0) 6.51.43.21.91
             </td>
             <td style="vertical-align: top; text-align: right">
                 Facture n°{{ $bill->id }}
             </td>
         </tr>
         <tr>
-            <td><p style="font-size: 11px">Dispensé d'immatriculation au registre du commerce et des sociétés (RCS) et au répertoire des métiers</p>
+            <td><p style="font-size: 11px">Dispensé d'immatriculation au registre du commerce et des sociétés (RCS) et
+                    au répertoire des métiers</p>
             </td>
             <td>
                 <div style="float: right">
                     {{ $bill->client->company_name }}<br>
-                    {{ $bill->client->siren }}<br>
                     {{ $bill->client->address }}<br>
                     {{ $bill->client->postal_code }} {{ $bill->client->city }}<br>
                     {{ $bill->client->country }}<br>
                 </div>
             </td>
         </tr>
+    </table>
+    <table style="width: 100%;margin-top: 75px">
         <tr>
             <td colspan="2">
                 <table style="margin-bottom: 30px">
                     <tr>
-                        <td>Référence :</td>
+                        <td style="width:  100px">Référence :</td>
                         <td>{{ $bill->id }}</td>
                     </tr>
                     <tr>
@@ -52,8 +54,9 @@
         @foreach($currencies as $currency => $benefits )
             <tr>
                 <td colspan="2">
-                    <table style="width: 100%; margin-bottom: 50px;" class="benefit">
-                        <caption>Payable en {{ $currency }}</caption>
+                    <h3 style=" font-weight: bold; text-align: left; padding: 0; margin: 0">{{$bill->designation}}</h3>
+                    <table style="width: 100%; margin-top: 10px" class="benefit" cellpadding="0" cellspacing="0">
+                        <tbody>
                         <tr>
                             <th>Quantité</th>
                             <th>Désignation</th>
@@ -68,26 +71,27 @@
                                 <td>{{ $benefit->pivot->unit_price *  $benefit->pivot->quantity}}</td>
                             </tr>
                         @endforeach
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 50%">&nbsp;</td>
-                <td>
-                    <table style="width: 100%">
-                        <tr>
+                        </tbody>
+                        <tfoot>
+                        <tr class="tot">
+                            <td colspan="2" class="border-0">&nbsp;</td>
                             <td>Total HT</td>
                             <td>{{ $benefits->sum(function($b) {
                         return $b->pivot->unit_price *  $b->pivot->quantity;
-                    }) }}</td>
+                    }) }} {{ $currency }}</td>
                         </tr>
+                        <tr>
+                            <td colspan="2" class="border-0"></td>
+                            <td colspan="2" class="border-0"><small>TVA non applicable, art. 293 B du CGI</small></td>
+                        </tr>
+                        </tfoot>
                     </table>
                 </td>
             </tr>
         @endforeach
         <tr>
             <td style="width:50%;">&nbsp;</td>
-            <td>TVA non applicable, art. 293 B du CGI</td>
+
         </tr>
         <tr>
             <td>En votre aimable réglement<br><br>Cordialement</td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Benefit;
 use App\Models\Bill;
 use App\Models\Client;
+use App\Notifications\BillAvailable;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Validator;
@@ -44,6 +45,7 @@ class BillController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'client_id'            => 'required:exists:clients,id',
+            'designation'          => 'required',
             'benefit.*.value'      => 'sometimes',
             'benefit.*.quantity'   => 'sometimes|integer|min:0',
             'benefit.*.unit_price' => 'sometimes|numeric|min:0',
@@ -55,7 +57,7 @@ class BillController extends Controller
 
         $validator->after(function ($validator) {
             $benefits = request()->input('benefits');
-            $c = collect($benefits)->filter(function($b) {
+            $c        = collect($benefits)->filter(function ($b) {
                 return !empty($b['value']);
             });
             if ($c->isEmpty()) {
@@ -64,13 +66,13 @@ class BillController extends Controller
             foreach ($benefits as $idx => $benefit) {
                 if (!empty($benefit['value'])) {
                     if (empty($benefit['quantity'])) {
-                        $validator->errors()->add('benefit_' . $idx . '_quantity', 'Quantity is required');
+                        $validator->errors()->add('benefit_'.$idx.'_quantity', 'Quantity is required');
                     }
                     if (empty($benefit['unit_price'])) {
-                        $validator->errors()->add('benefit_' . $idx . '_unit_price', 'Price is required');
+                        $validator->errors()->add('benefit_'.$idx.'_unit_price', 'Price is required');
                     }
                     if (empty($benefit['currency'])) {
-                        $validator->errors()->add('benefit_' . $idx . '_currency', 'Currency is required');
+                        $validator->errors()->add('benefit_'.$idx.'_currency', 'Currency is required');
                     }
                 }
             }
@@ -123,7 +125,12 @@ class BillController extends Controller
      */
     public function edit($id)
     {
-        //
+        $bill = Bill::findOrFail($id);
+        $bill->load('client');
+        $bill->load('benefits');
+        $clients  = Client::all();
+        $benefits = Benefit::all();
+        return view('bills.edit', ['bill' => $bill, 'clients' => $clients, 'benefits' => $benefits]);
     }
 
     /**
@@ -135,12 +142,81 @@ class BillController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $bill = Bill::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'client_id'            => 'required:exists:clients,id',
+            'designation'          => 'required',
+            'benefit.*.value'      => 'sometimes',
+            'benefit.*.quantity'   => 'sometimes|integer|min:0',
+            'benefit.*.unit_price' => 'sometimes|numeric|min:0',
+            'benefit.*.currency'   => [
+                'sometimes',
+                Rule::in(collect(config('billing.currencies'))->keys()),
+            ]
+        ]);
+
+        $validator->after(function ($validator) {
+            $benefits = request()->input('benefits');
+            $c        = collect($benefits)->filter(function ($b) {
+                return !empty($b['value']);
+            });
+            if ($c->isEmpty()) {
+                $validator->errors()->add('benefits', 'No benefits found');
+            }
+            foreach ($benefits as $idx => $benefit) {
+                if (!empty($benefit['value'])) {
+                    if (empty($benefit['quantity'])) {
+                        $validator->errors()->add('benefit_'.$idx.'_quantity', 'Quantity is required');
+                    }
+                    if (empty($benefit['unit_price'])) {
+                        $validator->errors()->add('benefit_'.$idx.'_unit_price', 'Price is required');
+                    }
+                    if (empty($benefit['currency'])) {
+                        $validator->errors()->add('benefit_'.$idx.'_currency', 'Currency is required');
+                    }
+                }
+            }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->route('bills.edit', ['id' => $id])
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+        \DB::beginTransaction();
+        try {
+            $bill = $bill->fill([
+                'client_id' => request()->input('client_id'),
+                'designation' => request()->input('designation'),
+            ]);
+            $bill->benefits()->detach();
+            foreach (request()->input('benefits') as $benefit) {
+                if (!empty($benefit['value'])) {
+                    $model = Benefit::firstOrCreate(['value' => $benefit['value']]);
+                    $bill->benefits()->attach($model->id, [
+                        'currency'   => $benefit['currency'],
+                        'unit_price' => $benefit['unit_price'],
+                        'quantity'   => $benefit['quantity']
+                    ]);
+                }
+            }
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollback();
+        }
+        return redirect()->route('bills.show', ['id' => $bill->id]);
     }
 
     public function emit(Request $request, $id)
     {
-
+        $bill = Bill::findOrFail($id);
+        $bill->draft = 0;
+        $bill->save();
+        $bill->savePdf();
+        $bill->client->notify(new BillAvailable($bill));
+        return redirect()->route('bills.index')->with('status', 'Facture publiée');;
     }
 
     /**

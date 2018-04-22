@@ -15,4 +15,5 @@ mix.js('resources/assets/js/app.js', 'public/js')
    .js('resources/assets/js/default-app.js', 'public/js')
    .js('resources/assets/js/bill.js', 'public/js')
    .scripts(['resources/assets/js/fontawesome-all.min.js'], 'public/js/vendors.js')
+   .sass('resources/assets/sass/pdf.scss', 'public/css')
    .sass('resources/assets/sass/app.scss', 'public/css');

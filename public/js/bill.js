@@ -60,53 +60,25 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 189);
+/******/ 	return __webpack_require__(__webpack_require__.s = 190);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 14:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 189:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(190);
-
-
-/***/ }),
-
 /***/ 190:
 /***/ (function(module, exports, __webpack_require__) {
 
-var preloader = __webpack_require__(46);
-var navigation = __webpack_require__(47);
-var _ = __webpack_require__(80);
+module.exports = __webpack_require__(191);
+
+
+/***/ }),
+
+/***/ 191:
+/***/ (function(module, exports, __webpack_require__) {
+
+var preloader = __webpack_require__(48);
+var navigation = __webpack_require__(49);
+var _ = __webpack_require__(24);
 
 var app = new Vue({
     el: '#bill',
@@ -119,13 +91,15 @@ var app = new Vue({
                     'value': '',
                     'quantity': '',
                     'unit_price': '',
-                    'currency': ''
+                    'currency': '',
+                    'designation': ''
                 }]
             },
             clients: window.clients || [],
             benefits: window.benefits || [],
             errors: window.errors || {},
-            client_id: window.bill ? window.bill.client_id : ''
+            client_id: window.bill ? window.bill.client_id : '',
+            client: window.bill && window.bill.client ? window.bill.client.name : ''
         };
     },
 
@@ -175,32 +149,7 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 46:
-/***/ (function(module, exports) {
-
-module.exports = {
-    mounted: function mounted() {
-        this.$el.classList.remove('d-none');
-        document.getElementById('main-loader').remove();
-    }
-};
-
-/***/ }),
-
-/***/ 47:
-/***/ (function(module, exports) {
-
-module.exports = {
-    data: function data() {
-        return {
-            activeIndex: '0'
-        };
-    }
-};
-
-/***/ }),
-
-/***/ 80:
+/***/ 24:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -17302,11 +17251,11 @@ module.exports = {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14), __webpack_require__(81)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(25)(module)))
 
 /***/ }),
 
-/***/ 81:
+/***/ 25:
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -17331,6 +17280,59 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+
+/***/ 48:
+/***/ (function(module, exports) {
+
+module.exports = {
+    mounted: function mounted() {
+        this.$el.classList.remove('d-none');
+        document.getElementById('main-loader').remove();
+    }
+};
+
+/***/ }),
+
+/***/ 49:
+/***/ (function(module, exports) {
+
+module.exports = {
+    data: function data() {
+        return {
+            activeIndex: '0'
+        };
+    }
+};
+
+/***/ }),
+
+/***/ 6:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
 
 
 /***/ })

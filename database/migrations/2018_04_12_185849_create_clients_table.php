@@ -23,6 +23,8 @@ class CreateClientsTable extends Migration
             $table->string('country');
             $table->string('phone_number');
             $table->string('email');
+            $table->string('gd_folder_id')->nullable()->default(null);
+            $table->string('gd_web_view_link')->nullable()->default(null);
             $table->softDeletes();
             $table->timestamps();
         });
