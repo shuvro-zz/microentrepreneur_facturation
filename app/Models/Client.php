@@ -46,6 +46,20 @@ class Client extends Model
             $this->gd_folder_id = $file->id;
             $this->gd_web_view_link = $file->webViewLink;
             $this->save();
+
+            // add permission
+            app()->make(\Google_Service_Drive::class)->getClient()->setUseBatch(true);
+            $batch          = app()->make(\Google_Service_Drive::class)->createBatch();
+            $userPermission = new \Google_Service_Drive_Permission([
+                'type' => 'anyone',
+                'role' => 'reader',
+            ]);
+            $request        = app()->make(\Google_Service_Drive::class)->permissions->create(
+                $this->gd_folder_id, $userPermission, ['fields' => 'id']);
+            $batch->add($request, 'user');
+            $batch->execute();
+            app()->make(\Google_Service_Drive::class)->getClient()->setUseBatch(false);
+
         }
 
         return $this->gd_folder_id;

@@ -53,7 +53,7 @@ class Bill extends Model implements HasMedia
 
     public function savePDF()
     {
-        $name = sprintf('facture-%d.pdf', $this->id);
+        $name = sprintf('facture-%s.pdf', str_slug($this->designation));
         $dir = sprintf('bills/%s', str_slug($this->client->company_name));
         if (!is_dir($dir)) {
             Storage::makeDirectory($dir);
@@ -63,14 +63,16 @@ class Bill extends Model implements HasMedia
         $folderId     = $this->client->folder_id;
         $fileMetadata = new \Google_Service_Drive_DriveFile([
             'name'    => $name,
-            'parents' => [$folderId]
+            'parents' => [$folderId],
+            'writersCanShare' => true
         ]);
 
         $content           = file_get_contents($path);
         $file              = app()->make(\Google_Service_Drive::class)->files->create($fileMetadata, [
             'data'     => $content,
             'mimeType' => 'application/pdf',
-            'fields'   => 'id,webViewLink,webContentLink']);
+            'fields'   => 'id,webViewLink'
+        ]);
         $this->gd_file_id = $file->id;
         $this->gd_web_view_link = $file->webViewLink;
         $this->save();
