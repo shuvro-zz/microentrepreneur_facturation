@@ -21,7 +21,8 @@ const app = new Vue({
             benefits: window.benefits || [],
             errors: window.errors || {},
             client_id: window.bill ? window.bill.client_id : '',
-            client: window.bill && window.bill.client ? window.bill.client.name : ''
+            client: window.bill && window.bill.client ? window.bill.client.name : '',
+
         }
     },
     watch: {

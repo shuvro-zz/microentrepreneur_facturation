@@ -6,6 +6,7 @@ use App\Benefit;
 use App\Models\Bill;
 use App\Models\Client;
 use App\Notifications\BillAvailable;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Validator;
@@ -217,6 +218,13 @@ class BillController extends Controller
         $bill->savePdf();
         $bill->client->notify(new BillAvailable($bill));
         return redirect()->route('bills.index')->with('status', 'Facture publiée');;
+    }
+
+    public function paid(Request $request, $id)
+    {
+        $bill = Bill::findOrFail($id);
+        $bill->paid(Carbon::now());
+        return redirect()->route('bills.index')->with('status', 'Facture payée');;
     }
 
     /**

@@ -44,8 +44,17 @@
                         label="Actions"
                 >
                     <template slot-scope="scope">
-                        <el-button type="primary" size="small"><a class="text-white" :href="scope.row.showUrl"><i
+                        <el-button v-if="scope.row.draft" type="primary" size="small"><a class="text-white" :href="scope.row.showUrl"><i
                                         class="fas fa-eye"></i></a></el-button>
+
+                        <el-button v-if="!scope.row.draft" type="primary" size="small"><a class="text-white" :href="scope.row.gd_web_view_link" target="_blank"><i
+                                        class="fas fa-eye"></i></a></el-button>
+
+                        <el-form v-if="!scope.row.paid_at && !scope.row.draft" class="d-inline-block" :model="scope.row" :action="scope.row.paidUrl" method="post">
+                            @csrf
+                            <el-button type="primary" native-type="submit" size="small"><a class="text-white" :href="scope.row.showUrl"><i
+                                            class="fas fa-money-bill-alt"></i></a></el-button>
+                        </el-form>
                     </template>
                 </el-table-column>
             </el-table>
@@ -65,6 +74,7 @@
     <script>
         window.data = {!! json_encode($bills->map(function($b) {
             $b->showUrl = route('bills.show', ['id' => $b->id]);
+            $b->paidUrl = route('bills.paid', ['id' => $b->id]);
             $b->totalPrice = collect($b->total_price)->map(function($p, $currency) {
                 return $p . ' ' .$currency;
             })->implode(' - ');

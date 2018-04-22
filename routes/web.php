@@ -20,3 +20,4 @@ Route::resource('clients', 'ClientController');
 Route::resource('bills', 'BillController');
 
 Route::post('bills/emit/{id}', 'BillController@emit')->name('bills.emit');
+Route::post('bills/paid/{id}', 'BillController@paid')->name('bills.paid');
