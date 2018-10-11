@@ -58,15 +58,15 @@
                     <table style="width: 100%; margin-top: 10px" class="benefit" cellpadding="0" cellspacing="0">
                         <tbody>
                         <tr>
-                            <th>Quantité</th>
                             <th>Désignation</th>
+                            <th>Quantité</th>
                             <th>Prix unitaire HT</th>
                             <th>Prix total HT</th>
                         </tr>
                         @foreach($benefits as $benefit)
                             <tr>
-                                <td>{{ $benefit->pivot->quantity }}</td>
                                 <td>{{ $benefit->value }}</td>
+                                <td>{{ $benefit->pivot->quantity }}</td>
                                 <td>{{ $benefit->pivot->unit_price }}</td>
                                 <td>{{ $benefit->pivot->unit_price *  $benefit->pivot->quantity}}</td>
                             </tr>
@@ -82,7 +82,9 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="border-0"></td>
-                            <td colspan="2" class="border-0"><small>TVA non applicable, art. 293 B du CGI</small></td>
+                            <td colspan="2" class="border-0">
+                                <small>TVA non applicable, art. 293 B du CGI</small>
+                            </td>
                         </tr>
                         </tfoot>
                     </table>
@@ -97,4 +99,31 @@
             <td>En votre aimable réglement<br><br>Cordialement</td>
         </tr>
     </table>
+    <br>
+    <br>
+    @foreach($currencies as $currency => $benefits )
+
+        <p>
+            Paiement par virement (en {{ $currency }}) :
+        </p>
+        @if($currency == 'CHF')
+            <p>Banque : Crédit Agricole next bank (Suisse) SA</p>
+            <p>
+                IBAN : CH21 0824 3068 2467 0000 1
+            </p>
+            <p>
+                BIC. BANK IDENTIFIER CODE : AGRICHGXXXX
+            </p>
+        @endif
+        @if($currency == '€')
+            <p>Banque : CA DES SAVOIE</p>
+            <p>
+                IBAN :  FR76 1810 6000 1596 7553 0680 862
+            </p>
+            <p>
+                BIC. BANK IDENTIFIER CODE : AGRIFRPP881
+            </p>
+        @endif
+    @endforeach
+
 </div>

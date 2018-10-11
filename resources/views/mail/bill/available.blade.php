@@ -1,14 +1,11 @@
 @component('mail::message')
-# {{ $bill->client->company_name }}
+# Cher David
 
-Une nouvelle facture est disponible
+Voici la facture pour {{ $bill->designation }}
 
 @component('mail::button', ['url' => $bill->gd_web_view_link])
-Voir la facture
+    {{ $bill->designation }}
 @endcomponent
-
-Toutes vos factures sont consultables <a href="{{ $bill->client->gd_web_view_link }}">ici</a>
-
 
 Merci <br>
 Aurélien RUARO

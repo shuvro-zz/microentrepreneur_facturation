@@ -88,7 +88,10 @@ class BillController extends Controller
 
         \DB::beginTransaction();
         try {
-            $bill = Bill::create(['client_id' => request()->input('client_id')]);
+            $bill = Bill::create([
+                'client_id' => request()->input('client_id'),
+                'designation' => request()->input('designation')
+            ]);
             foreach (request()->input('benefits') as $benefit) {
                 if (!empty($benefit['value'])) {
                     $model = Benefit::firstOrCreate(['value' => $benefit['value']]);
@@ -189,7 +192,7 @@ class BillController extends Controller
         \DB::beginTransaction();
         try {
             $bill = $bill->fill([
-                'client_id' => request()->input('client_id'),
+                'client_id'   => request()->input('client_id'),
                 'designation' => request()->input('designation'),
             ]);
             $bill->benefits()->detach();

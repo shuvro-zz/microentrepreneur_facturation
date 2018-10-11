@@ -4,7 +4,6 @@
 
 @section('body')
     @if($bill->draft)
-    <el-alert title="" type="warning" "></el-alert>
     <el-card header="Facture #{{$bill->id}}" class="bg-dark text-white">
         <div style="width: 21cm; height: 29.7cm" class="m-auto border bg-white text-dark">
             @include('bills.pdf', ['bill' => $bill])

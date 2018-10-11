@@ -16,7 +16,7 @@ class Bill extends Model implements HasMedia
 
     use HasMediaTrait;
 
-    protected $fillable = ['client_id'];
+    protected $fillable = ['client_id', 'designation'];
 
     protected $appends = ['total_price'];
     use SoftDeletes;
