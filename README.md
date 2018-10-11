@@ -10,5 +10,5 @@ Send Invoice Google Drive link by email
 
 # Libraries
 - Laravel
-- Vuejs && [element](https://element.eleme.io/#/en-US)
+- Vuejs & [element](https://element.eleme.io/#/en-US)
 
