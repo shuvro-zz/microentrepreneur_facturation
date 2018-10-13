@@ -2,11 +2,11 @@
 Manage Clients and Invoices
 
 # Features
-Create clients
-Create invoices
-Generate PDF Invoice  
-Auto Store on Google Drive
-Send Invoice Google Drive link by email
+- Create clients
+- Create invoices
+- Generate PDF Invoice  
+- Auto Store on Google Drive
+- Send Invoice Google Drive link by email
 
 # Libraries
 - Laravel
